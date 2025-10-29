@@ -38,7 +38,7 @@ main > p, main > h2, main > h3 {
   margin-bottom: 0.5em;
 }
 
-main > {
+main {
   width: fit-content;
 }
 
@@ -46,6 +46,8 @@ img {
   width: 50vw;
   max-width: 500px;
   border-radius: 1em;
+  display: block;
+  margin-top: 1em;
 }
 
 @media (max-width: 700px) {
@@ -53,3 +55,10 @@ img {
     width: 80vw;
   }
 }
+
+button.language-toggle {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+}
+
