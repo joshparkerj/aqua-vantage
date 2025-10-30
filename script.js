@@ -15,6 +15,9 @@ const pageElements = {
   cancellation: document.querySelector("form > p.cancellation"),
   emphaticRemark: document.querySelector("form > p.emphatic-remark"),
   briefPitch: document.querySelector("p.brief-pitch"),
+
+  nextPage: document.querySelector("button.next-page"),
+  previousPage: document.querySelector("button.previous-page"),
 };
 
 let language = "spanish";
@@ -37,6 +40,8 @@ const englishLanguageText = {
   emphaticRemark: "It's completely free and there's no obligation!",
   briefPitch:
     "You have the right to know the condition of your drinking water and how it may affect your HEALTH, your HOUSEHOLD BUDGET, and your PROPERTY.",
+  nextPage: "Next Page",
+  previousPage: "Previous Page",
 };
 
 const spanishLanguageText = {
@@ -57,6 +62,8 @@ const spanishLanguageText = {
   emphaticRemark: "ES GRATIS Y SIN NINGÚN COMPROMISO!",
   briefPitch:
     "Usted tiene el derecho de saber en qué condición le llega su agua potable; y como le puede afectar, su SALUD, su ECONOMIA DOMESTICA, y su PROPIEDAD.",
+  nextPage: "Página Siguiente",
+  previousPage: "Página Anterior",
 };
 
 pageElements.languageToggle.addEventListener("click", () => {
@@ -75,3 +82,50 @@ pageElements.languageToggle.addEventListener("click", () => {
     element.textContent = text[elementName];
   });
 });
+
+let currentPageNumber = 0;
+
+const pages = [...document.querySelectorAll("[class*=page-number]")];
+
+const pageTurnEventListener = (predicate, pageIncrement) => () => {
+  if (predicate()) {
+    currentPageNumber += pageIncrement;
+    if (currentPageNumber === pages.length - 1) {
+      pageElements.nextPage.classList.add("inactive");
+    } else {
+      pageElements.nextPage.classList.remove("inactive");
+    }
+
+    if (currentPageNumber === 0) {
+      pageElements.previousPage.classList.add("inactive");
+    } else {
+      pageElements.previousPage.classList.remove("inactive");
+    }
+    pages.forEach((page, pageNumber) => {
+      if (pageNumber < currentPageNumber) {
+        page.classList.remove("on-screen");
+        page.classList.remove("off-right");
+        page.classList.add("off-left");
+      } else if (pageNumber === currentPageNumber) {
+        page.classList.remove("off-right");
+        page.classList.remove("off-left");
+        page.classList.add("on-screen");
+      } else {
+        page.classList.remove("on-screen");
+        page.classList.remove("off-left");
+        page.classList.add("off-right");
+      }
+      console.log(currentPageNumber, page, pageNumber);
+    });
+  }
+};
+
+pageElements.nextPage.addEventListener(
+  "click",
+  pageTurnEventListener(() => currentPageNumber < pages.length - 1, 1),
+);
+
+pageElements.previousPage.addEventListener(
+  "click",
+  pageTurnEventListener(() => currentPageNumber > 0, -1),
+);

@@ -20,10 +20,36 @@ body {
   font-optical-sizing: auto;
 }
 
+fieldset {
+  width: fit-content;
+  padding: 1em;
+}
+
+input,
+select {
+  font-family: "Hepta Slab", serif;
+  padding: 0.2em;
+  background-color: hsl(185deg, 41%, 92%);
+  margin: 0.1em;
+  border-radius: 0.3em;
+  border: solid 3px hsl(200deg, 50%, 62%);
+}
+
 main,
 section,
 form {
   margin: 2rem;
+}
+
+main,
+form {
+  top: 145px;
+  transition: left 0.6s;
+  position: fixed;
+}
+
+form {
+  width: 500px;
 }
 
 h3 {
@@ -66,6 +92,22 @@ main {
   width: fit-content;
 }
 
+.on-screen {
+  left: 2rem;
+}
+
+.off-right {
+  left: 120vw;
+}
+
+.off-left {
+  left: -120vw;
+}
+
+form img {
+  display: none;
+}
+
 img {
   width: 50vw;
   max-width: 500px;
@@ -80,8 +122,32 @@ img {
   }
 }
 
+button {
+  font-family: "Hepta Slab", serif;
+  padding: 0.3em;
+  background-color: hsl(221deg, 71%, 62%, 0.5);
+  border-radius: 0.3em;
+  border: solid 3px hsla(221deg, 71%, 32%, 0.8);
+}
+
 button.language-toggle {
   position: fixed;
   top: 1em;
   right: 1em;
+}
+
+button.next-page {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+}
+
+button.previous-page {
+  position: fixed;
+  bottom: 1em;
+  left: 1em;
+}
+
+button.inactive {
+  display: none;
 }
