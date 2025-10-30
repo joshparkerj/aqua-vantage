@@ -75,4 +75,3 @@ pageElements.languageToggle.addEventListener("click", () => {
     element.textContent = text[elementName];
   });
 });
-

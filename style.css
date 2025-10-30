@@ -1,9 +1,29 @@
-body {
-    background-color: hsl(191deg, 86%, 52%);
+@font-face {
+  font-family: "TASA Orbiter";
+  src: url("TASAOrbiter-VariableFont_wght.ttf");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
 }
 
-main, h1, form {
-  margin: 2em;
+@font-face {
+  font-family: "Hepta Slab";
+  src: url("HeptaSlab-VariableFont_wght.ttf");
+  font-weight: 1 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: "Hepta Slab", serif;
+  background-color: hsl(191deg, 86%, 52%);
+  font-optical-sizing: auto;
+}
+
+main,
+section,
+form {
+  margin: 2rem;
 }
 
 h3 {
@@ -12,14 +32,16 @@ h3 {
 }
 
 p {
-  font-family: sans-serif;
+  font-family: "TASA Orbiter", sans-serif;
 }
 
 .address {
   font-style: oblique;
 }
 
-.phone, .friendly-offer, .website {
+.phone,
+.friendly-offer,
+.website {
   font-weight: bold;
 }
 
@@ -32,7 +54,9 @@ p {
   text-decoration: none;
 }
 
-main > p, main > h2, main > h3 {
+main > p,
+main > h2,
+main > h3 {
   text-align: center;
   margin-top: 0;
   margin-bottom: 0.5em;
@@ -61,4 +85,3 @@ button.language-toggle {
   top: 1em;
   right: 1em;
 }
-
