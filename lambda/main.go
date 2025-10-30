@@ -2,14 +2,72 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
+
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
-func hello() (string, error) {
-	return "Hello λ!", nil
+type Appointment struct {
+	Name            string `json:"name"`
+	AddressLine1    string `json:"addressLine1"`
+	AddressLine2    string `json:"addressLine2"`
+	City            string `json:"city"`
+	State           string `json:"state"`
+	Zip             string `json:"zip"`
+	Phone           string `json:"phone"`
+	ApptDateAndTime string `json:"apptDateAndTime"`
+}
+
+var (
+	client *dynamodb.Client
+)
+
+func init() {
+	// Initialize the dynamodb client outside of the handler, during the init phase
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		log.Fatalf("unable to load SDK config, %v", err)
+	}
+
+	client = dynamodb.NewFromConfig(cfg)
+}
+
+func saveAppt(ctx context.Context, tableName string, appt Appointment) error {
+	// if we're going to use a uuid, I guess it's probably at this time that we'll create it
+	var input dynamodb.PutItemInput
+	client.PutItem(ctx, &input)
+	return nil
+}
+
+func hello(ctx context.Context, event json.RawMessage) error {
+	var appt Appointment
+	if err := json.Unmarshal(event, &appt); err != nil {
+		log.Printf("Failed to unmarshal event: %v", err)
+		return err
+	}
+
+	tableName := os.Getenv("DYNAMO_TABLE")
+	if tableName == "" {
+		log.Printf("DYNAMO_TABLE environment variable is not set")
+		return fmt.Errorf("missing required environment variable RECEIPT_BUCKET")
+	}
+
+	// save the appointment to dynamodb using the helper method
+	if err := saveAppt(ctx, tableName, appt); err != nil {
+		return err
+	}
+
+	log.Printf("Successfully saved appt to dynamodb table %s", tableName)
+	return nil
+
 }
 
 func main() {
-	// Make the handler available for Remote Procedure Call by AWS Lambda
 	lambda.Start(hello)
 }
