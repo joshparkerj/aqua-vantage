@@ -11,6 +11,8 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/google/uuid"
 )
 
 type Appointment struct {
@@ -41,7 +43,44 @@ func init() {
 func saveAppt(ctx context.Context, tableName string, appt Appointment) error {
 	// if we're going to use a uuid, I guess it's probably at this time that we'll create it
 	var input dynamodb.PutItemInput
-	client.PutItem(ctx, &input)
+
+	input.TableName = &tableName
+
+	input.Item = make(map[string]types.AttributeValue)
+	input.Item["PrimaryKey"] = &types.AttributeValueMemberS{
+		Value: uuid.New().String(),
+	}
+	input.Item["Name"] = &types.AttributeValueMemberS{
+		Value: appt.Name,
+	}
+	input.Item["AddressLine1"] = &types.AttributeValueMemberS{
+		Value: appt.AddressLine1,
+	}
+	input.Item["AddressLine2"] = &types.AttributeValueMemberS{
+		Value: appt.AddressLine2,
+	}
+	input.Item["City"] = &types.AttributeValueMemberS{
+		Value: appt.City,
+	}
+	input.Item["State"] = &types.AttributeValueMemberS{
+		Value: appt.State,
+	}
+	input.Item["Zip"] = &types.AttributeValueMemberS{
+		Value: appt.Zip,
+	}
+	input.Item["Phone"] = &types.AttributeValueMemberS{
+		Value: appt.Phone,
+	}
+	input.Item["ApptDateAndTime"] = &types.AttributeValueMemberS{
+		Value: appt.ApptDateAndTime,
+	}
+
+	/*output*/
+	_, err := client.PutItem(ctx, &input)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -55,7 +94,7 @@ func hello(ctx context.Context, event json.RawMessage) error {
 	tableName := os.Getenv("DYNAMO_TABLE")
 	if tableName == "" {
 		log.Printf("DYNAMO_TABLE environment variable is not set")
-		return fmt.Errorf("missing required environment variable RECEIPT_BUCKET")
+		return fmt.Errorf("missing required environment variable DYNAMO_TABLE")
 	}
 
 	// save the appointment to dynamodb using the helper method
