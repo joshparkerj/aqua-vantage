@@ -15,6 +15,10 @@ import (
 	"github.com/google/uuid"
 )
 
+type Event struct {
+	Body string `json:"body"`
+}
+
 type Appointment struct {
 	Name            string `json:"name"`
 	AddressLine1    string `json:"addressLine1"`
@@ -86,10 +90,23 @@ func saveAppt(ctx context.Context, tableName string, appt Appointment) error {
 
 func hello(ctx context.Context, event json.RawMessage) error {
 	var appt Appointment
-	if err := json.Unmarshal(event, &appt); err != nil {
+	var e Event
+
+	log.Printf(string(event))
+
+	if err := json.Unmarshal(event, &e); err != nil {
 		log.Printf("Failed to unmarshal event: %v", err)
 		return err
 	}
+
+	log.Printf(e.Body)
+
+	if err := json.Unmarshal([]byte(e.Body), &appt); err != nil {
+		log.Printf("Failed to unmarshal appt: %v", err)
+		return err
+	}
+
+	log.Printf("successfully unmarshalled appt for date: %v", appt.ApptDateAndTime)
 
 	tableName := os.Getenv("DYNAMO_TABLE")
 	if tableName == "" {
