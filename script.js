@@ -18,7 +18,20 @@ const pageElements = {
 
   nextPage: document.querySelector("button.next-page"),
   previousPage: document.querySelector("button.previous-page"),
+
+  submitButton: document.querySelector("form input[type=submit]"),
+  thanksForSubmitting: document.querySelector(
+    "#appointment-form-submitted > h2",
+  ),
 };
+
+const appointmentRequestForm = document.querySelector(
+  "#appointment-request-form",
+);
+
+const appointmentFormSubmitted = document.querySelector(
+  "#appointment-form-submitted",
+);
 
 let language = "spanish";
 
@@ -42,6 +55,9 @@ const englishLanguageText = {
     "You have the right to know the condition of your drinking water and how it may affect your HEALTH, your HOUSEHOLD BUDGET, and your PROPERTY.",
   nextPage: "Next Page",
   previousPage: "Previous Page",
+  submitButton: "Submit",
+  thanksForSubmitting:
+    "Thank you for requesting your appointment to analyze your home water supply! We will contact you as soon as we are able.",
 };
 
 const spanishLanguageText = {
@@ -64,6 +80,9 @@ const spanishLanguageText = {
     "Usted tiene el derecho de saber en qué condición le llega su agua potable; y como le puede afectar, su SALUD, su ECONOMIA DOMESTICA, y su PROPIEDAD.",
   nextPage: "Página Siguiente",
   previousPage: "Página Anterior",
+  submitButton: "Enviar",
+  thanksForSubmitting:
+    "¡Gracias por solicitar su cita para analizar el agua en su hogar! Nos pondremos en contacto con usted lo antes posible.",
 };
 
 pageElements.languageToggle.addEventListener("click", () => {
@@ -79,16 +98,29 @@ pageElements.languageToggle.addEventListener("click", () => {
   }
 
   Object.entries(pageElements).forEach(([elementName, element]) => {
-    element.textContent = text[elementName];
+    if (elementName === "submitButton") {
+      // the submit button must be handled as a special case
+      // because its text is in its "value" attribute
+      // and not in its textContent
+      element.setAttribute("value", text[elementName]);
+    } else {
+      element.textContent = text[elementName];
+    }
   });
 });
 
 let currentPageNumber = 0;
 
-const pages = [...document.querySelectorAll("[class*=page-number]")];
+const getPages = () => {
+  // console.log("getting pages now 🔍");
+  const pages = [...document.querySelectorAll("[class*=page-number]")];
+  // console.log(pages);
+  return pages;
+};
 
 const pageTurnEventListener = (predicate, pageIncrement) => () => {
   if (predicate()) {
+    const pages = getPages();
     currentPageNumber += pageIncrement;
     if (currentPageNumber === pages.length - 1) {
       pageElements.nextPage.classList.add("inactive");
@@ -122,10 +154,60 @@ const pageTurnEventListener = (predicate, pageIncrement) => () => {
 
 pageElements.nextPage.addEventListener(
   "click",
-  pageTurnEventListener(() => currentPageNumber < pages.length - 1, 1),
+  pageTurnEventListener(() => currentPageNumber < getPages().length - 1, 1),
 );
 
 pageElements.previousPage.addEventListener(
   "click",
   pageTurnEventListener(() => currentPageNumber > 0, -1),
 );
+
+// page turn with arrow keys left and right
+document.body.onkeydown = ({ code }) => {
+  if (code === "ArrowLeft") pageElements.previousPage.click();
+  if (code === "ArrowRight") pageElements.nextPage.click();
+};
+
+[...document.querySelectorAll("form input")].forEach((inputElement) => {
+  inputElement.onkeydown = (e) => e.stopPropagation();
+});
+
+appointmentRequestForm.addEventListener("submit", (submissionEvent) => {
+  submissionEvent.preventDefault();
+  console.log("submitted");
+  console.log(submissionEvent);
+  pageElements.submitButton.disabled = true;
+  const formFields = [...submissionEvent.target].filter(
+    ({ tagName }) => tagName !== "FIELDSET",
+  );
+  fetch("https://hqlpruvski.execute-api.us-west-2.amazonaws.com/appt", {
+    method: "POST",
+    body: JSON.stringify({
+      name: formFields[0].value,
+      addressLine1: formFields[1].value,
+      addressLine2: formFields[2].value,
+      city: formFields[3].value,
+      state: formFields[4].value,
+      zip: formFields[5].value,
+      phone: formFields[6].value,
+      apptDateAndTime: formFields[7].value,
+    }),
+  })
+    .then((r) => {
+      if (r.status === 200) {
+        appointmentFormSubmitted.classList = appointmentRequestForm.classList;
+        appointmentRequestForm.classList = "inactive";
+        localStorage.setItem("has-submitted", true);
+      } else {
+        console.error(r);
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+});
+
+if (localStorage.getItem("has-submitted")) {
+  appointmentFormSubmitted.classList = appointmentRequestForm.classList;
+  appointmentRequestForm.classList = "inactive";
+}

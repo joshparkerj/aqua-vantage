@@ -3,17 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <title>AQUAVANTAGE</title>
+    <!-- see helpful hint here: https://stackoverflow.com/a/61238584 -->
+    <link rel="icon" href="favicon.svg" />
     <link
       href="HeptaSlab-VariableFont_wght.ttf"
       rel="preload"
       as="font"
       type="font/ttf"
+      crossorigin
     />
     <link
       href="TASAOrbiter-VariableFont_wght.ttf"
       rel="preload"
       as="font"
       type="font/ttf"
+      crossorigin
     />
     <link href="style.css" rel="stylesheet" />
   </head>
@@ -41,7 +45,7 @@
         <a href="https://aqua-vantage.com">aqua-vantage.com</a>
       </p>
     </main>
-    <form class="off-right page-number-1">
+    <form id="appointment-request-form" class="off-right page-number-1">
       <img
         src="wine-glasses-placed-upside-down-in-an-open-dishwasher.jpg"
         alt="wine glasses being placed upside down in a dishwasher"
@@ -53,15 +57,20 @@
       </p>
       <p class="emphatic-remark">ES GRATIS Y SIN NINGÚN COMPROMISO</p>
       <label for="your-name">Nombre:</label>
-      <input id="your-name" />
+      <input id="your-name" minlength="2" maxlength="60" required />
       <fieldset>
         <legend>Address</legend>
         <label for="address-line-1">Dirección Línea 1:</label>
-        <input id="address-line-1" /><br />
+        <input
+          id="address-line-1"
+          minlength="2"
+          maxlength="60"
+          required
+        /><br />
         <label for="address-line-2">Dirección Línea 2:</label>
         <input id="address-line-2" /><br />
         <label for="address-city">Ciudad:</label>
-        <input id="address-city" /><br />
+        <input id="address-city" minlength="2" maxlength="60" required /><br />
         <label for="address-state">Estado:</label>
         <select id="address-state">
           <option>AL</option>
@@ -117,19 +126,36 @@
           <option>WY</option></select
         ><br />
         <label for="address-zip">Código Postal:</label>
-        <input id="address-zip" pattern="\d{5}" /><br />
+        <input
+          id="address-zip"
+          pattern="\d{5}(\s?-?\d{4})?"
+          minlength="5"
+          maxlength="11"
+          required
+        /><br />
       </fieldset>
       <label for="phone-number">Número de Teléfono:</label>
       <input
         id="phone-number"
-        pattern="(\(\d{3}\)|\d{3})[\s-]?\d{3}[\s-]?\d{4}"
+        pattern="(\(\d{3}\)|\d{3})[\s\-]?\d{3}[\s\-]?\d{4}"
+        minlength="10"
+        maxlength="14"
+        required
       /><br />
       <label for="appt-date-time">Fecha y Hora de la Cita:</label>
-      <input type="datetime-local" id="appt-date-time" />
+      <input type="datetime-local" id="appt-date-time" required />
+      <br />
+      <input type="submit" value="Enviar" />
     </form>
     <button class="language-toggle">English</button>
     <button class="next-page">Página Siguiente</button>
     <button class="previous-page inactive">Página Anterior</button>
+    <div id="appointment-form-submitted" class="inactive">
+      <h2>
+        ¡Gracias por solicitar su cita para analizar el agua en su hogar! Nos
+        pondremos en contacto con usted lo antes posible.
+      </h2>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
