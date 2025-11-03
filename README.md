@@ -2,10 +2,11 @@
 
 ## Project To Dos:
 
-- Zoom properly on mobile
+
 
 ## Completed Project To Dos:
 
+- Zoom properly on mobile
 - Swipe through page on mobile
 - Send email
 
