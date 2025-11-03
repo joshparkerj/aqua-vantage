@@ -12,6 +12,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/aws/aws-sdk-go-v2/service/sesv2"
+	sesTypes "github.com/aws/aws-sdk-go-v2/service/sesv2/types"
 	"github.com/google/uuid"
 )
 
@@ -31,7 +33,8 @@ type Appointment struct {
 }
 
 var (
-	client *dynamodb.Client
+	client      *dynamodb.Client
+	emailClient *sesv2.Client
 )
 
 func init() {
@@ -42,6 +45,13 @@ func init() {
 	}
 
 	client = dynamodb.NewFromConfig(cfg)
+	emailClient = sesv2.NewFromConfig(cfg)
+}
+
+func dynamoString(value string) *types.AttributeValueMemberS {
+	return &types.AttributeValueMemberS{
+		Value: value,
+	}
 }
 
 func saveAppt(ctx context.Context, tableName string, appt Appointment) error {
@@ -51,39 +61,88 @@ func saveAppt(ctx context.Context, tableName string, appt Appointment) error {
 	input.TableName = &tableName
 
 	input.Item = make(map[string]types.AttributeValue)
-	input.Item["PrimaryKey"] = &types.AttributeValueMemberS{
-		Value: uuid.New().String(),
-	}
-	input.Item["Name"] = &types.AttributeValueMemberS{
-		Value: appt.Name,
-	}
-	input.Item["AddressLine1"] = &types.AttributeValueMemberS{
-		Value: appt.AddressLine1,
-	}
-	input.Item["AddressLine2"] = &types.AttributeValueMemberS{
-		Value: appt.AddressLine2,
-	}
-	input.Item["City"] = &types.AttributeValueMemberS{
-		Value: appt.City,
-	}
-	input.Item["State"] = &types.AttributeValueMemberS{
-		Value: appt.State,
-	}
-	input.Item["Zip"] = &types.AttributeValueMemberS{
-		Value: appt.Zip,
-	}
-	input.Item["Phone"] = &types.AttributeValueMemberS{
-		Value: appt.Phone,
-	}
-	input.Item["ApptDateAndTime"] = &types.AttributeValueMemberS{
-		Value: appt.ApptDateAndTime,
-	}
+	input.Item["PrimaryKey"] = dynamoString(uuid.New().String())
+	input.Item["Name"] = dynamoString(appt.Name)
+	input.Item["AddressLine1"] = dynamoString(appt.AddressLine1)
+	input.Item["AddressLine2"] = dynamoString(appt.AddressLine2)
+	input.Item["City"] = dynamoString(appt.City)
+	input.Item["State"] = dynamoString(appt.State)
+	input.Item["Zip"] = dynamoString(appt.Zip)
+	input.Item["Phone"] = dynamoString(appt.Phone)
+	input.Item["ApptDateAndTime"] = dynamoString(appt.ApptDateAndTime)
 
 	/*output*/
+	// Here we put the item into Dynamo DB
 	_, err := client.PutItem(ctx, &input)
 	if err != nil {
 		return err
 	}
+
+	// Here we put the item into an email
+	utf8Charset := "UTF-8"
+
+	subjectString := "Someone requested an appointment!"
+	subject := sesTypes.Content{
+		Data:    &subjectString,
+		Charset: &utf8Charset,
+	}
+
+	bodyTextString := fmt.Sprintf("Someone has requested an appointment at aqua-vantage.com!"+
+		" Here are all the details:\n\nName: %v\nAddress Line 1: %v\nAddress Line 2: %v\n"+
+		"City: %v\nState: %v\nZip: %v\nPhone: %v\nRequested Appointment Date and Time: %v\n"+
+		"Please get into contact with the requester to confirm the appointment!", appt.Name, appt.AddressLine1, appt.AddressLine2, appt.City, appt.State, appt.Zip, appt.Phone, appt.ApptDateAndTime)
+
+	bodyHtmlString := fmt.Sprintf("<html><head></head><body><h1>Someone has requested an appointment at aqua-vantage.com!</h1>"+
+		"<p>Here are all the details:</p><ol><li>Name: %v</li><li>Address Line 1: %v</li><li>Address Line 2: %v</li>"+
+		"<li>City: %v</li><li>State: %v</li><li>Zip: %v</li><li>Phone: %v</li><li>Requested Appointment Date and Time: %v</li></ol>"+
+		"<p>Please get into contact with the requester to confirm the appointment!</p></body></html>", appt.Name, appt.AddressLine1, appt.AddressLine2, appt.City, appt.State, appt.Zip, appt.Phone, appt.ApptDateAndTime)
+
+	bodyText := sesTypes.Content{
+		Data:    &bodyTextString,
+		Charset: &utf8Charset,
+	}
+
+	bodyHtml := sesTypes.Content{
+		Data:    &bodyHtmlString,
+		Charset: &utf8Charset,
+	}
+
+	body := sesTypes.Body{
+		Html: &bodyHtml,
+		Text: &bodyText,
+	}
+
+	message := sesTypes.Message{
+		Body:    &body,
+		Subject: &subject,
+	}
+
+	emailContent := sesTypes.EmailContent{
+		Simple: &message,
+	}
+
+	toAddresses := make([]string, 1)
+	toAddresses[0] = os.Getenv("EMAIL_RECIPIENT")
+
+	destination := sesTypes.Destination{
+		ToAddresses: toAddresses,
+	}
+
+	fromAddress := os.Getenv("EMAIL_SENDER")
+
+	sendEmailInput := sesv2.SendEmailInput{
+		Content:          &emailContent,
+		Destination:      &destination,
+		FromEmailAddress: &fromAddress,
+	}
+
+	sendEmailOutput, err := emailClient.SendEmail(ctx, &sendEmailInput)
+	if err != nil {
+		log.Printf("error sending email: %v", err)
+		return err
+	}
+
+	log.Printf("Sent Email with message ID: %v", sendEmailOutput.MessageId)
 
 	return nil
 }
