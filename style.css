@@ -118,6 +118,50 @@ img {
   margin-top: 1em;
 }
 
+@media (orientation: portrait) {
+  form,
+  div#appointment-form-submitted {
+    width: 86vw;
+  }
+
+  h1 {
+    font-size: 100px;
+    margin-top: 1em;
+  }
+
+  img {
+    width: 86vw;
+    max-width: none;
+  }
+
+  body {
+    font-size: 30px;
+  }
+
+  main {
+    font-size: 50px;
+  }
+
+  .brief-pitch {
+    text-indent: 4em;
+  }
+
+  main,
+  form,
+  div#appointment-form-submitted {
+    top: 555px;
+  }
+
+  button {
+    font-size: 30px;
+  }
+
+  select,
+  input {
+    font-size: 40px;
+  }
+}
+
 @media (max-width: 700px) {
   img {
     width: 80vw;

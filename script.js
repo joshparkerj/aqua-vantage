@@ -184,7 +184,7 @@ document.addEventListener(
     const deltaY = clientY - startY;
     if (
       Math.abs(deltaX) > Math.abs(deltaY) &&
-      Math.abs(deltaX) > (window.innerWidth / 3)
+      Math.abs(deltaX) > window.innerWidth / 3
     ) {
       if (deltaX < 0)
         // swiped right
