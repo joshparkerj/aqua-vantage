@@ -118,6 +118,42 @@ img {
   margin-top: 1em;
 }
 
+button {
+  font-family: "Hepta Slab", serif;
+  padding: 0.3em;
+  background-color: hsl(221deg, 71%, 62%, 0.5);
+  border-radius: 0.3em;
+  border: solid 3px hsla(221deg, 71%, 32%, 0.8);
+}
+
+button.language-toggle {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+}
+
+button.next-page {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+}
+
+button.previous-page {
+  position: fixed;
+  bottom: 1em;
+  left: 1em;
+}
+
+.inactive {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  img {
+    width: 80vw;
+  }
+}
+
 @media (orientation: portrait) {
   form,
   div#appointment-form-submitted {
@@ -162,38 +198,81 @@ img {
   }
 }
 
-@media (max-width: 700px) {
-  img {
-    width: 80vw;
+@media (orientation: portrait) and (max-height: 2050px) {
+  main,
+  form,
+  div#appointment-form-submitted {
+    top: 444px;
+  }
+
+  .brief-pitch {
+    font-size: 20px;
   }
 }
 
-button {
-  font-family: "Hepta Slab", serif;
-  padding: 0.3em;
-  background-color: hsl(221deg, 71%, 62%, 0.5);
-  border-radius: 0.3em;
-  border: solid 3px hsla(221deg, 71%, 32%, 0.8);
+@media (orientation: portrait) and (max-height: 1800px) {
+  main {
+    font-size: 40px;
+  }
+
+  select,
+  input {
+    font-size: 30px;
+  }
 }
 
-button.language-toggle {
-  position: fixed;
-  top: 1em;
-  right: 1em;
+@media (orientation: portrait) and (max-height: 1550px) {
+  body {
+    font-size: 20px;
+  }
+
+  .brief-pitch {
+    font-size: 30px;
+  }
+
+  main,
+  form,
+  div#appointment-form-submitted {
+    top: 360px;
+  }
+
+  img {
+    object-fit: cover;
+    height: 250px;
+    object-position: 0 33%;
+  }
 }
 
-button.next-page {
-  position: fixed;
-  bottom: 1em;
-  right: 1em;
+@media (orientation: portrait) and (max-height: 1300px) {
+  h1 {
+    font-size: 85px;
+  }
+
+  select, input {
+    font-size: 25px;
+  }
 }
 
-button.previous-page {
-  position: fixed;
-  bottom: 1em;
-  left: 1em;
-}
+@media (orientation: landscape) and (max-height: 800px) {
+  img {
+    object-fit: cover;
+    height: 200px;
+    object-position: 0 33%;
+  }
 
-.inactive {
-  display: none;
+  main,
+  form,
+  div#appointment-form-submitted {
+    top: 100px;
+  }
+
+  form {
+    font-size: 14px;
+    width: 600px;
+  }
+
+    form#appointment-request-form > * {
+        margin-bottom: 3px;
+        margin-top: 3px;
+    }
 }
