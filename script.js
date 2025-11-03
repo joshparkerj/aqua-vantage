@@ -168,6 +168,34 @@ document.body.onkeydown = ({ code }) => {
   if (code === "ArrowRight") pageElements.nextPage.click();
 };
 
+// page turn with touch swipe
+const touches = {};
+document.addEventListener(
+  "touchstart",
+  ({ changedTouches: [{ clientX, clientY, identifier }] }) =>
+    (touches[identifier] = [clientX, clientY]),
+);
+
+document.addEventListener(
+  "touchend",
+  ({ changedTouches: [{ clientX, clientY, identifier }] }) => {
+    const [startX, startY] = touches[identifier];
+    const deltaX = clientX - startX;
+    const deltaY = clientY - startY;
+    if (
+      Math.abs(deltaX) > Math.abs(deltaY) &&
+      Math.abs(deltaX) > (window.innerWidth / 3)
+    ) {
+      if (deltaX < 0)
+        // swiped right
+        pageElements.nextPage.click();
+      if (deltaX > 0)
+        // swiped left
+        pageElements.previousPage.click();
+    }
+  },
+);
+
 [...document.querySelectorAll("form input")].forEach((inputElement) => {
   inputElement.onkeydown = (e) => e.stopPropagation();
 });
