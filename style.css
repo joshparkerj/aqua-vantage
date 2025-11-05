@@ -248,7 +248,8 @@ button.previous-page {
     font-size: 85px;
   }
 
-  select, input {
+  select,
+  input {
     font-size: 25px;
   }
 }
@@ -271,8 +272,8 @@ button.previous-page {
     width: 600px;
   }
 
-    form#appointment-request-form > * {
-        margin-bottom: 3px;
-        margin-top: 3px;
-    }
+  form#appointment-request-form > * {
+    margin-bottom: 3px;
+    margin-top: 3px;
+  }
 }
