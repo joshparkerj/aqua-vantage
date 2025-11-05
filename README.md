@@ -6,6 +6,7 @@
 - Adding about 18 more pages worth of content
 - tabbed page browsing
 - url history
+- more responsive css work on different sized browsers on desktop
 
 ## Completed Project To Dos:
 
