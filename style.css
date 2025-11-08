@@ -14,10 +14,27 @@
   font-display: swap;
 }
 
+body.color-0 {
+  background-color: hsl(191deg, 86%, 52%);
+}
+
+body.color-1 {
+  background-color: hsl(201deg, 76%, 72%);
+}
+
+body.color-2 {
+  background-color: hsl(211deg, 66%, 92%);
+}
+
+body.color-3 {
+  background-color: hsl(221deg, 56%, 100%);
+}
+
 body {
   font-family: "Hepta Slab", serif;
   background-color: hsl(191deg, 86%, 52%);
   font-optical-sizing: auto;
+  transition: background-color 0.6s;
 }
 
 fieldset {
@@ -35,20 +52,14 @@ select {
   border: solid 3px hsl(200deg, 50%, 62%);
 }
 
-main,
-section,
-form {
-  margin: 2rem;
-}
-
-main,
-form,
-div#appointment-form-submitted {
+[class*="page-number"] {
   top: 145px;
   transition: left 0.6s;
   position: fixed;
+  margin: 2rem;
 }
 
+article,
 form,
 div#appointment-form-submitted {
   width: 500px;
@@ -182,9 +193,7 @@ button.previous-page {
     text-indent: 4em;
   }
 
-  main,
-  form,
-  div#appointment-form-submitted {
+  [class*="page-number"] {
     top: 555px;
   }
 
@@ -199,9 +208,7 @@ button.previous-page {
 }
 
 @media (orientation: portrait) and (max-height: 2050px) {
-  main,
-  form,
-  div#appointment-form-submitted {
+  [class*="page-number"] {
     top: 444px;
   }
 
@@ -230,9 +237,7 @@ button.previous-page {
     font-size: 30px;
   }
 
-  main,
-  form,
-  div#appointment-form-submitted {
+  [class*="page-number"] {
     top: 360px;
   }
 
@@ -261,9 +266,7 @@ button.previous-page {
     object-position: 0 33%;
   }
 
-  main,
-  form,
-  div#appointment-form-submitted {
+  [class*="page-number"] {
     top: 100px;
   }
 

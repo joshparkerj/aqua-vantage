@@ -118,10 +118,13 @@ const getPages = () => {
   return pages;
 };
 
+const numberOfBackgroundColors = 4;
+
 const pageTurnEventListener = (predicate, pageIncrement) => () => {
   if (predicate()) {
     const pages = getPages();
     currentPageNumber += pageIncrement;
+
     if (currentPageNumber === pages.length - 1) {
       pageElements.nextPage.classList.add("inactive");
     } else {
@@ -133,7 +136,15 @@ const pageTurnEventListener = (predicate, pageIncrement) => () => {
     } else {
       pageElements.previousPage.classList.remove("inactive");
     }
+
+    document.body.classList.remove(
+      `color-${(currentPageNumber - pageIncrement) % numberOfBackgroundColors}`,
+    );
+    document.body.classList.add(
+      `color-${currentPageNumber % numberOfBackgroundColors}`,
+    );
     pages.forEach((page, pageNumber) => {
+      // TODO: this is a little ugly 😬
       if (pageNumber < currentPageNumber) {
         page.classList.remove("on-screen");
         page.classList.remove("off-right");
