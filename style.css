@@ -66,7 +66,7 @@ div#appointment-form-submitted {
 }
 
 h3 {
-  color: hsl(8, 92%, 43%);
+  color: hsl(12, 88%, 39%);
   font-style: italic;
 }
 
@@ -85,7 +85,7 @@ p {
 }
 
 .friendly-offer {
-  color: hsl(8, 92%, 43%);
+  color: hsl(12, 88%, 39%);
 }
 
 .website > a {
