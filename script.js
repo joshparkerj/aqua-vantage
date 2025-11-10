@@ -113,7 +113,7 @@ let currentPageNumber = 0;
 
 const getPages = () => {
   // console.log("getting pages now 🔍");
-  const pages = [...document.querySelectorAll("[class*=page-number]")];
+  const pages = [...document.querySelectorAll("[class*=page-name]")];
   // console.log(pages);
   return pages;
 };
@@ -250,3 +250,58 @@ if (localStorage.getItem("has-submitted")) {
   appointmentFormSubmitted.classList = appointmentRequestForm.classList;
   appointmentRequestForm.classList = "inactive";
 }
+
+// section for the first animation 😁
+
+const polarToPolygon = (theta, r, xoffset = 0, yoffset = 0) => {
+  const x = Math.cos(theta) * r * 50;
+  const y = Math.sin(theta) * r * 50;
+  return [`${x + 50 + xoffset}%`, `${y + 50 + yoffset}%`];
+};
+
+const spikyClipPath = (spikeCount, innerRadius, spikeLength) =>
+  `polygon(${new Array(2 * spikeCount)
+    .fill()
+    .map((_, i) => [
+      ((1 + i) * 2 * Math.PI) / (2 * spikeCount),
+      innerRadius + spikeLength * (i % 2),
+    ])
+    .map(([a, b]) => polarToPolygon(a, b))
+    .flatMap((e) => e.join(" "))
+    .join(", ")})`;
+
+[...document.querySelectorAll("div[class*=animation001] > div")].forEach(
+  (e, i) => {
+    const spiky = document.createElement("div");
+    const spikeCount = Math.floor(36 * Math.random() + 4);
+    const innerRadius = Math.random();
+    const spikeLength = 1 - innerRadius;
+    spiky.style.setProperty(
+      "clip-path",
+      spikyClipPath(spikeCount, innerRadius, spikeLength),
+    );
+    const hue = Math.floor(360 * Math.random());
+    spiky.style.setProperty(
+      "background-image",
+      `linear-gradient(45deg, hsl(${hue}deg, 100%, 50%), hsl(${hue + 90}deg, 100%, 50%))`,
+    );
+    const animationDuration = Math.random() * 10 + 5;
+    spiky.style.setProperty("animation-duration", `${animationDuration}s`);
+    spiky.style.setProperty("animation-timing-function", "linear");
+    spiky.style.setProperty("animation-name", "spinning");
+    spiky.style.setProperty("animation-iteration-count", "infinite");
+    spiky.style.setProperty("position", "absolute");
+    spiky.style.setProperty("top", "-0.5em");
+    spiky.style.setProperty("left", "0px");
+    spiky.style.setProperty("width", "2.5em");
+    spiky.style.setProperty("height", "2.5em");
+    spiky.style.setProperty("z-index", `-${i + 1}`);
+    e.style.setProperty("filter", `drop-shadow(20px 20px 4px hsl(${hue + 180}deg, 100%, 50%))`);
+    const fontSize = Math.random() * 4 + 4;
+    e.style.setProperty("font-size", `${fontSize}rem`);
+    e.style.setProperty("z-index", "1");
+    e.style.setProperty("position", "relative");
+    e.style.setProperty("left", `${4 * (i % 2)}em`);
+    e.appendChild(spiky);
+  },
+);
