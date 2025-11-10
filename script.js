@@ -280,27 +280,19 @@ const spikyClipPath = (spikeCount, innerRadius, spikeLength) =>
       "clip-path",
       spikyClipPath(spikeCount, innerRadius, spikeLength),
     );
+
     const hue = Math.floor(360 * Math.random());
     spiky.style.setProperty(
       "background-image",
       `linear-gradient(45deg, hsl(${hue}deg, 100%, 50%), hsl(${hue + 90}deg, 100%, 50%))`,
     );
+
     const animationDuration = Math.random() * 10 + 5;
     spiky.style.setProperty("animation-duration", `${animationDuration}s`);
-    spiky.style.setProperty("animation-timing-function", "linear");
-    spiky.style.setProperty("animation-name", "spinning");
-    spiky.style.setProperty("animation-iteration-count", "infinite");
-    spiky.style.setProperty("position", "absolute");
-    spiky.style.setProperty("top", "-0.5em");
-    spiky.style.setProperty("left", "0px");
-    spiky.style.setProperty("width", "2.5em");
-    spiky.style.setProperty("height", "2.5em");
     spiky.style.setProperty("z-index", `-${i + 1}`);
     e.style.setProperty("filter", `drop-shadow(20px 20px 4px hsl(${hue + 180}deg, 100%, 50%))`);
     const fontSize = Math.random() * 4 + 4;
     e.style.setProperty("font-size", `${fontSize}rem`);
-    e.style.setProperty("z-index", "1");
-    e.style.setProperty("position", "relative");
     e.style.setProperty("left", `${4 * (i % 2)}em`);
     e.appendChild(spiky);
   },
