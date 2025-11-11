@@ -52,7 +52,7 @@ select {
   border: solid 3px hsl(200deg, 50%, 62%);
 }
 
-[class*="page-name"] {
+[id*="page-name"] {
   top: 145px;
   transition: left 0.6s;
   position: fixed;
@@ -193,7 +193,7 @@ button.previous-page {
     text-indent: 4em;
   }
 
-  [class*="page-name"] {
+  [id*="page-name"] {
     top: 555px;
   }
 
@@ -208,7 +208,7 @@ button.previous-page {
 }
 
 @media (orientation: portrait) and (max-height: 2050px) {
-  [class*="page-name"] {
+  [id*="page-name"] {
     top: 444px;
   }
 
@@ -237,7 +237,7 @@ button.previous-page {
     font-size: 30px;
   }
 
-  [class*="page-name"] {
+  [id*="page-name"] {
     top: 360px;
   }
 
@@ -266,7 +266,7 @@ button.previous-page {
     object-position: 0 33%;
   }
 
-  [class*="page-name"] {
+  [id*="page-name"] {
     top: 100px;
   }
 
@@ -290,12 +290,12 @@ button.previous-page {
   }
 }
 
-div[class*=animation001] > div {
+div[id*=animation001] > div {
   z-index: 1;
   position: relative;
 }
 
-div[class*=animation001] > div > div {
+div[id*=animation001] > div > div {
   animation-timing-function: linear;
   animation-name: spinning;
   animation-iteration-count: infinite;

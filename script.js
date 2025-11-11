@@ -26,7 +26,7 @@ const pageElements = {
 };
 
 const appointmentRequestForm = document.querySelector(
-  "#appointment-request-form",
+  "#page-name-appointment-request-form",
 );
 
 const appointmentFormSubmitted = document.querySelector(
@@ -113,7 +113,7 @@ let currentPageNumber = 0;
 
 const getPages = () => {
   // console.log("getting pages now 🔍");
-  const pages = [...document.querySelectorAll("[class*=page-name]")];
+  const pages = [...document.querySelectorAll("[id*=page-name]")];
   // console.log(pages);
   return pages;
 };
@@ -270,7 +270,7 @@ const spikyClipPath = (spikeCount, innerRadius, spikeLength) =>
     .flatMap((e) => e.join(" "))
     .join(", ")})`;
 
-[...document.querySelectorAll("div[class*=animation001] > div")].forEach(
+[...document.querySelectorAll("div[id*=animation001] > div")].forEach(
   (e, i) => {
     const spiky = document.createElement("div");
     const spikeCount = Math.floor(36 * Math.random() + 4);
