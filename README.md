@@ -2,6 +2,12 @@
 
 ## Project To Dos:
 
+- basic comment function
+- make everything work without javascript (albeit not as well)
+- about 18 more animations of varying degrees of chaos
+- be sure to respect "prefers reduced motion"
+- build script to make static pages from the main page
+
 - Terraform plus CI/CD (github actions)
 - Adding about 18 more pages worth of content
 - tabbed page browsing
