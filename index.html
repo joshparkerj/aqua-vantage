@@ -134,10 +134,7 @@
     <article class="off-right" id="page-name-testimonials">
       <h2>¡Excelentes testimonios!</h2>
     </article>
-    <form
-      id="page-name-appointment-request-form"
-      class="off-right"
-    >
+    <form id="page-name-appointment-request-form" class="off-right">
       <img
         src="assets/wine-glasses-placed-upside-down-in-an-open-dishwasher.jpg"
         alt="copas de vino colocadas boca abajo en un lavavajillas"
@@ -239,9 +236,11 @@
       <br />
       <input type="submit" value="Enviar" />
     </form>
-    <button class="language-toggle">English</button>
-    <button class="next-page">Página Siguiente</button>
-    <button class="previous-page inactive">Página Anterior</button>
+    <button class="language-toggle ui-control">English</button>
+    <!-- TODO: These button classes should *probably* be IDs instead -->
+    <button class="next-page ui-control">Página Siguiente</button>
+    <button class="previous-page ui-control inactive">Página Anterior</button>
+    <button id="view-comments" class="ui-control">Véa comentarios</button>
     <div id="appointment-form-submitted" class="inactive">
       <h2>
         ¡Gracias por solicitar su cita para analizar el agua en su hogar! Nos

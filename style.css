@@ -137,26 +137,87 @@ button {
   border: solid 3px hsla(221deg, 71%, 32%, 0.8);
 }
 
-button.language-toggle {
+button.ui-control {
   position: fixed;
+  cursor: pointer;
+}
+
+button.language-toggle {
   top: 1em;
   right: 1em;
 }
 
 button.next-page {
-  position: fixed;
   bottom: 1em;
   right: 1em;
 }
 
 button.previous-page {
-  position: fixed;
   bottom: 1em;
   left: 1em;
 }
 
+button#view-comments {
+  bottom: 1em;
+  width: 18vw;
+  left: 41vw;
+}
+
 .inactive {
   display: none;
+}
+
+div#comments-view-box {
+  position: fixed;
+  border: 1px solid cyan;
+  box-shadow: 10px 7px 17px hsla(0deg, 53%, 14%, 0.7);
+  width: 80vw;
+  height: 68vh;
+  top: 10vh;
+  left: 10vw;
+  background: hsl(203deg, 60%, 19%);
+}
+
+div#comments-view-box-exit-button {
+  color: white;
+  padding: 1em;
+  background: hsla(26deg, 82%, 56%, 0.8);
+  display: block;
+  width: fit-content;
+  margin: 1em;
+  position: relative;
+  left: 70vw;
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px black;
+  border: 1px solid gray;
+}
+
+div#comments-view-box {
+  color: white;
+  overflow: auto;
+  scrollbar-color: black hsla(190deg, 70%, 40%, 0.4);
+}
+
+div#comments-view-box form {
+  margin: 2em;
+  padding: 2em;
+  border: 5px solid black;
+  width: fit-content;
+  border-radius: 10px;
+}
+
+div#comments-view-box form textarea {
+  font-size: 2rem;
+}
+
+div#comments-view-box h3 {
+  color: white;
+}
+
+div.comment {
+  background: hsla(0deg, 100%, 100%, 0.08);
+  margin: 0.8em;
+  padding: 0.3em 1.3em;
 }
 
 @media (max-width: 700px) {
@@ -290,12 +351,12 @@ button.previous-page {
   }
 }
 
-div[id*=animation001] > div {
+div[id*="animation001"] > div {
   z-index: 1;
   position: relative;
 }
 
-div[id*=animation001] > div > div {
+div[id*="animation001"] > div > div {
   animation-timing-function: linear;
   animation-name: spinning;
   animation-iteration-count: infinite;

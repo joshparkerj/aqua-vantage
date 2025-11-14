@@ -18,6 +18,7 @@ const pageElements = {
 
   nextPage: document.querySelector("button.next-page"),
   previousPage: document.querySelector("button.previous-page"),
+  viewComments: document.querySelector("button#view-comments"),
 
   submitButton: document.querySelector("form input[type=submit]"),
   thanksForSubmitting: document.querySelector(
@@ -290,10 +291,122 @@ const spikyClipPath = (spikeCount, innerRadius, spikeLength) =>
     const animationDuration = Math.random() * 10 + 5;
     spiky.style.setProperty("animation-duration", `${animationDuration}s`);
     spiky.style.setProperty("z-index", `-${i + 1}`);
-    e.style.setProperty("filter", `drop-shadow(10px 10px 4px hsl(${hue + 45}deg, 100%, 40%)) drop-shadow(20px 20px 4px hsl(${hue + 45}deg, 100%, 30%))`);
+    e.style.setProperty(
+      "filter",
+      `drop-shadow(10px 10px 4px hsl(${hue + 45}deg, 100%, 40%)) drop-shadow(20px 20px 4px hsl(${hue + 45}deg, 100%, 30%))`,
+    );
     const fontSize = Math.random() * 4 + 4;
     e.style.setProperty("font-size", `${fontSize}rem`);
     e.style.setProperty("left", `${4 * (i % 2)}em`);
     e.appendChild(spiky);
   },
 );
+
+// comments stuff
+// SAMPLE COMMENTS! 🤡
+const sampleComments = [
+  {
+    text: "You suck!",
+    name: "Doug",
+    date: "2025-11-14T02:31:50.211Z",
+  },
+  {
+    text: "Wow, cool website!",
+    name: "Alice",
+    date: "2025-11-13T02:31:50.211Z",
+  },
+  {
+    text: `🤣 Her mom is a legend! 💪 Respect the roast! 🔥`,
+    name: "Chattter",
+    date: "2025-08-01T02:31:50.211Z",
+  },
+  {
+    text: `🔥 Nice editing skills! Go Pro + Premiere = 🤯 😂
+    ResidentSleeper
+
+     Kreygasm
+      ! Iconic! 🤔 Interesting take! 👀 Let's chat! 😄`,
+    name: "Chatbot",
+    date: "2025-11-01T02:31:50.211Z",
+  },
+  {
+    text: "I'm not a fan of the government",
+    name: "Vegeta",
+    date: "2025-11-11T02:31:50.211Z",
+  },
+];
+
+const commentsViewBox = document.createElement("div");
+commentsViewBox.id = "comments-view-box";
+const exitButton = document.createElement("div");
+exitButton.id = "comments-view-box-exit-button";
+exitButton.textContent = "exit";
+commentsViewBox.appendChild(exitButton);
+exitButton.addEventListener("click", () => {
+  commentsViewBox.parentNode.removeChild(commentsViewBox);
+});
+
+const commentsReadingArea = document.createElement("div");
+
+const displayComment = ({ text, name, date }) => {
+  const comment = document.createElement("div");
+  const commentText = document.createElement("p");
+  const commentAuthor = document.createElement("h3");
+  const commentDate = document.createElement("div");
+
+  const parsedDate = Date.parse(date);
+
+  commentText.appendChild(new Text(text));
+  commentAuthor.appendChild(new Text(name));
+
+  comment.appendChild(commentText);
+  comment.appendChild(commentAuthor);
+
+  // TODO: check for some goofy javascript gotcha that I might have to look out for
+  if (parsedDate) {
+    commentDate.appendChild(new Text(new Date(parsedDate).toLocaleString()));
+    comment.appendChild(commentDate);
+  }
+
+  comment.classList.add("comment");
+  commentsReadingArea.appendChild(comment);
+};
+
+sampleComments.forEach(displayComment);
+
+commentsViewBox.appendChild(commentsReadingArea);
+
+// The form for adding a comment:
+const commentForm = document.createElement("form");
+commentForm.innerHTML = `
+  <h2>Write your comment here!</h2>
+  <label for="comment-author">Your name:</label><br />
+  <input id="comment-author" /><br /><hr />
+  <label for="comment-text">Your comment:</label><br />
+  <textarea id="comment-text" rows="6" cols="30"></textarea><br />
+  <input type="submit" />
+`;
+
+commentForm.addEventListener("submit", (submitEvent) => {
+  submitEvent.preventDefault();
+  console.log(submitEvent);
+  commentForm.querySelector("input[type=submit]").disabled = true;
+  const formFields = [...submitEvent.target];
+
+  const comment = {
+    text: formFields[1].value,
+    name: formFields[0].value,
+    date: new Date().toJSON(),
+  };
+
+  sampleComments.push(comment);
+  displayComment(comment);
+});
+
+commentsViewBox.appendChild(commentForm);
+
+// viewing the comments!
+pageElements.viewComments.addEventListener("click", () => {
+  // show the comments view box
+  document.body.appendChild(commentsViewBox);
+});
