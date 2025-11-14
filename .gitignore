@@ -5,3 +5,4 @@
 *.ttf
 *.swp
 *.mp4
+node_modules/

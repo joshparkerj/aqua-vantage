@@ -1,0 +1,12 @@
+{
+  "name": "aqua-vantage",
+  "version": "1.0.0",
+  "description": "aqua-vantage/aquafeel utah website",
+  "author": "Josh Parker",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0"
+  }
+}
