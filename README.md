@@ -13,6 +13,7 @@
 - tabbed page browsing
 - url history
 - more responsive css work on different sized browsers on desktop
+- use the "scroll-timeline" for an animation
 
 ## Completed Project To Dos:
 
