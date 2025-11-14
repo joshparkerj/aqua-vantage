@@ -290,12 +290,12 @@ button.previous-page {
   }
 }
 
-div[id*=animation001] > div {
+div[id*="animation001"] > div {
   z-index: 1;
   position: relative;
 }
 
-div[id*=animation001] > div > div {
+div[id*="animation001"] > div > div {
   animation-timing-function: linear;
   animation-name: spinning;
   animation-iteration-count: infinite;

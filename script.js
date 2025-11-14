@@ -290,7 +290,10 @@ const spikyClipPath = (spikeCount, innerRadius, spikeLength) =>
     const animationDuration = Math.random() * 10 + 5;
     spiky.style.setProperty("animation-duration", `${animationDuration}s`);
     spiky.style.setProperty("z-index", `-${i + 1}`);
-    e.style.setProperty("filter", `drop-shadow(10px 10px 4px hsl(${hue + 45}deg, 100%, 40%)) drop-shadow(20px 20px 4px hsl(${hue + 45}deg, 100%, 30%))`);
+    e.style.setProperty(
+      "filter",
+      `drop-shadow(10px 10px 4px hsl(${hue + 45}deg, 100%, 40%)) drop-shadow(20px 20px 4px hsl(${hue + 45}deg, 100%, 30%))`,
+    );
     const fontSize = Math.random() * 4 + 4;
     e.style.setProperty("font-size", `${fontSize}rem`);
     e.style.setProperty("left", `${4 * (i % 2)}em`);
