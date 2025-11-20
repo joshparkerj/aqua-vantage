@@ -6,3 +6,4 @@
 *.swp
 *.mp4
 node_modules/
+_esy/
