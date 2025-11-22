@@ -401,6 +401,13 @@ commentForm.addEventListener("submit", (submitEvent) => {
 
   sampleComments.push(comment);
   displayComment(comment);
+  fetch("https://hqlpruvski.execute-api.us-west-2.amazonaws.com/comment", {
+    method: "POST",
+    body: JSON.stringify({
+      author: formFields[0].value,
+      text: formFields[1].value,
+    }),
+  });
 });
 
 commentsViewBox.appendChild(commentForm);
