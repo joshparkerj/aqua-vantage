@@ -2,7 +2,9 @@
 
 ## Project To Dos:
 
-- add prettierrc for code formatting
+- complete all translations
+- comprehensive responsiveness
+- refactor lambdas
 - basic comment function
 - make everything work without javascript (albeit not as well)
 - about 18 more animations of varying degrees of chaos
@@ -17,6 +19,7 @@
 
 ## Completed Project To Dos:
 
+- add prettierrc for code formatting
 - Zoom properly on mobile
 - Swipe through page on mobile
 - Send email
