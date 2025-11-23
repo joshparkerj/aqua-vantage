@@ -141,11 +141,14 @@ const pageTurnEventListener = (predicate, pageIncrement) => () => {
     document.body.classList.remove(
       `color-${(currentPageNumber - pageIncrement) % numberOfBackgroundColors}`,
     );
+
     document.body.classList.add(
       `color-${currentPageNumber % numberOfBackgroundColors}`,
     );
+
     pages.forEach((page, pageNumber) => {
       // TODO: this is a little ugly 😬
+      // The idea for improvement was to just change the page that is immediately to the left or right, instead of all of them
       if (pageNumber < currentPageNumber) {
         page.classList.remove("on-screen");
         page.classList.remove("off-right");
@@ -159,6 +162,7 @@ const pageTurnEventListener = (predicate, pageIncrement) => () => {
         page.classList.remove("off-left");
         page.classList.add("off-right");
       }
+
       console.log(currentPageNumber, page, pageNumber);
     });
   }
@@ -253,7 +257,6 @@ if (localStorage.getItem("has-submitted")) {
 }
 
 // section for the first animation 😁
-
 const polarToPolygon = (theta, r, xoffset = 0, yoffset = 0) => {
   const x = Math.cos(theta) * r * 50;
   const y = Math.sin(theta) * r * 50;
@@ -270,6 +273,9 @@ const spikyClipPath = (spikeCount, innerRadius, spikeLength) =>
     .map(([a, b]) => polarToPolygon(a, b))
     .flatMap((e) => e.join(" "))
     .join(", ")})`;
+
+    // TODO: use the spikyClipPath again for a second animation
+    // which will be a starry night with twinkling star animations
 
 [...document.querySelectorAll("div[id*=animation001] > div")].forEach(
   (e, i) => {
@@ -295,6 +301,7 @@ const spikyClipPath = (spikeCount, innerRadius, spikeLength) =>
       "filter",
       `drop-shadow(10px 10px 4px hsl(${hue + 45}deg, 100%, 40%)) drop-shadow(20px 20px 4px hsl(${hue + 45}deg, 100%, 30%))`,
     );
+
     const fontSize = Math.random() * 4 + 4;
     e.style.setProperty("font-size", `${fontSize}rem`);
     e.style.setProperty("left", `${4 * (i % 2)}em`);
@@ -362,7 +369,6 @@ const displayComment = ({ text, name, date }) => {
   comment.appendChild(commentText);
   comment.appendChild(commentAuthor);
 
-  // TODO: check for some goofy javascript gotcha that I might have to look out for
   if (parsedDate) {
     commentDate.appendChild(new Text(new Date(parsedDate).toLocaleString()));
     comment.appendChild(commentDate);
@@ -401,6 +407,7 @@ commentForm.addEventListener("submit", (submitEvent) => {
 
   sampleComments.push(comment);
   displayComment(comment);
+  // TODO: Maybe move this "magic value" to a config file
   fetch("https://hqlpruvski.execute-api.us-west-2.amazonaws.com/comment", {
     method: "POST",
     body: JSON.stringify({
