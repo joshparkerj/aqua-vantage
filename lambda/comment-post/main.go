@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -58,9 +59,16 @@ func saveComment(ctx context.Context, tableName string, comment Comment) error {
 	input.Item["Author"] = dynamoString(comment.Author)
 	input.Item["Text"] = dynamoString(comment.Text)
 
+	dateBytes, err := time.Now().MarshalJSON()
+	if err != nil {
+		return err
+	}
+
+	input.Item["Date"] = dynamoString(string(dateBytes))
+
 	/*output*/
 	// Here we put the item into Dynamo DB
-	_, err := client.PutItem(ctx, &input)
+	_, err = client.PutItem(ctx, &input)
 	if err != nil {
 		return err
 	}
