@@ -24,6 +24,8 @@ const pageElements = {
   thanksForSubmitting: document.querySelector(
     "#appointment-form-submitted > h2",
   ),
+
+  welcomeToApptButton: document.querySelector("button#welcome-to-appt"),
 };
 
 const appointmentRequestForm = document.querySelector(
@@ -119,63 +121,94 @@ const getPages = () => {
   return pages;
 };
 
+document.querySelectorAll(".off-right").forEach((article) => {
+  article.classList.add("inactive");
+});
+
 const numberOfBackgroundColors = 4;
 
-const pageTurnEventListener = (predicate, pageIncrement) => () => {
-  if (predicate()) {
-    const pages = getPages();
-    currentPageNumber += pageIncrement;
+const pageCount = getPages().length;
+const pageTimeouts = new Array(pageCount);
 
-    if (currentPageNumber === pages.length - 1) {
-      pageElements.nextPage.classList.add("inactive");
-    } else {
-      pageElements.nextPage.classList.remove("inactive");
-    }
+const pageMove = (newPageNumber) => () => {
+  const pages = getPages();
+  const oldPageNumber = currentPageNumber;
+  currentPageNumber = newPageNumber;
 
-    if (currentPageNumber === 0) {
-      pageElements.previousPage.classList.add("inactive");
-    } else {
-      pageElements.previousPage.classList.remove("inactive");
-    }
+  if (currentPageNumber === pages.length - 1) {
+    pageElements.nextPage.classList.add("inactive");
+  } else {
+    pageElements.nextPage.classList.remove("inactive");
+  }
 
-    document.body.classList.remove(
-      `color-${(currentPageNumber - pageIncrement) % numberOfBackgroundColors}`,
-    );
+  if (currentPageNumber === 0) {
+    pageElements.previousPage.classList.add("inactive");
+  } else {
+    pageElements.previousPage.classList.remove("inactive");
+  }
 
-    document.body.classList.add(
-      `color-${currentPageNumber % numberOfBackgroundColors}`,
-    );
+  document.body.classList.remove(
+    `color-${oldPageNumber % numberOfBackgroundColors}`,
+  );
 
-    pages.forEach((page, pageNumber) => {
-      // TODO: this is a little ugly 😬
-      // The idea for improvement was to just change the page that is immediately to the left or right, instead of all of them
-      if (pageNumber < currentPageNumber) {
-        page.classList.remove("on-screen");
-        page.classList.remove("off-right");
-        page.classList.add("off-left");
-      } else if (pageNumber === currentPageNumber) {
+  document.body.classList.add(
+    `color-${currentPageNumber % numberOfBackgroundColors}`,
+  );
+
+  pages.forEach((page, pageNumber) => {
+    if (pageNumber < currentPageNumber) {
+      page.classList.remove("on-screen");
+      page.classList.remove("off-right");
+      page.classList.add("off-left");
+      if (!page.classList.contains("inactive")) pageTimeouts[pageNumber] = setTimeout(() => {
+        page.classList.add("inactive");
+      }, 600);
+    } else if (pageNumber === currentPageNumber) {
+      page.classList.remove("inactive");
+      setTimeout(() => {
         page.classList.remove("off-right");
         page.classList.remove("off-left");
         page.classList.add("on-screen");
-      } else {
-        page.classList.remove("on-screen");
-        page.classList.remove("off-left");
-        page.classList.add("off-right");
-      }
+        clearTimeout(pageTimeouts[pageNumber]);
+      }, 0);
+    } else {
+      page.classList.remove("on-screen");
+      page.classList.remove("off-left");
+      page.classList.add("off-right");
+      if (!page.classList.contains("inactive")) pageTimeouts[pageNumber] = setTimeout(() => {
+        page.classList.add("inactive");
+      }, 600);
+    }
+  });
+};
 
-      console.log(currentPageNumber, page, pageNumber);
-    });
+const pageTurn = (predicate, pageIncrement) => () => {
+  if (predicate()) {
+    pageMove(currentPageNumber + pageIncrement)();
   }
+};
+
+const pageFind = (pageName) => () => {
+  // TODO: see if this can be refactored, reduced, cleaned up, DRYed...
+  const pages = getPages();
+  const pageNumber = pages.findIndex((page) => page.id.includes(pageName));
+  console.log("going to page number", pageNumber);
+  pageMove(pageNumber)();
 };
 
 pageElements.nextPage.addEventListener(
   "click",
-  pageTurnEventListener(() => currentPageNumber < getPages().length - 1, 1),
+  pageTurn(() => currentPageNumber < getPages().length - 1, 1),
 );
 
 pageElements.previousPage.addEventListener(
   "click",
-  pageTurnEventListener(() => currentPageNumber > 0, -1),
+  pageTurn(() => currentPageNumber > 0, -1),
+);
+
+pageElements.welcomeToApptButton.addEventListener(
+  "click",
+  pageFind("appointment-request-form"),
 );
 
 // page turn with arrow keys left and right
@@ -277,37 +310,35 @@ const spikyClipPath = (spikeCount, innerRadius, spikeLength) =>
 // TODO: use the spikyClipPath again for a second animation
 // which will be a starry night with twinkling star animations
 
-[...document.querySelectorAll("div[id*=animation001] > div")].forEach(
-  (e, i) => {
-    const spiky = document.createElement("div");
-    const spikeCount = Math.floor(36 * Math.random() + 4);
-    const innerRadius = Math.random();
-    const spikeLength = 1 - innerRadius;
-    spiky.style.setProperty(
-      "clip-path",
-      spikyClipPath(spikeCount, innerRadius, spikeLength),
-    );
+[...document.querySelectorAll("[id*=animation001] > div")].forEach((e, i) => {
+  const spiky = document.createElement("div");
+  const spikeCount = Math.floor(36 * Math.random() + 4);
+  const innerRadius = Math.random();
+  const spikeLength = 1 - innerRadius;
+  spiky.style.setProperty(
+    "clip-path",
+    spikyClipPath(spikeCount, innerRadius, spikeLength),
+  );
 
-    const hue = Math.floor(360 * Math.random());
-    spiky.style.setProperty(
-      "background-image",
-      `linear-gradient(45deg, hsl(${hue}deg, 100%, 50%), hsl(${hue + 90}deg, 100%, 50%))`,
-    );
+  const hue = Math.floor(360 * Math.random());
+  spiky.style.setProperty(
+    "background-image",
+    `linear-gradient(45deg, hsl(${hue}deg, 100%, 50%), hsl(${hue + 90}deg, 100%, 50%))`,
+  );
 
-    const animationDuration = Math.random() * 10 + 5;
-    spiky.style.setProperty("animation-duration", `${animationDuration}s`);
-    spiky.style.setProperty("z-index", `-${i + 1}`);
-    e.style.setProperty(
-      "filter",
-      `drop-shadow(10px 10px 4px hsl(${hue + 45}deg, 100%, 40%)) drop-shadow(20px 20px 4px hsl(${hue + 45}deg, 100%, 30%))`,
-    );
+  const animationDuration = Math.random() * 10 + 5;
+  spiky.style.setProperty("animation-duration", `${animationDuration}s`);
+  spiky.style.setProperty("z-index", `-${i + 1}`);
+  e.style.setProperty(
+    "filter",
+    `drop-shadow(10px 10px 4px hsl(${hue + 45}deg, 100%, 40%)) drop-shadow(20px 20px 4px hsl(${hue + 45}deg, 100%, 30%))`,
+  );
 
-    const fontSize = Math.random() * 4 + 4;
-    e.style.setProperty("font-size", `${fontSize}rem`);
-    e.style.setProperty("left", `${4 * (i % 2)}em`);
-    e.appendChild(spiky);
-  },
-);
+  const fontSize = Math.random() * 4 + 4;
+  e.style.setProperty("font-size", `${fontSize}rem`);
+  e.style.setProperty("left", `${4 * (i % 2)}em`);
+  e.appendChild(spiky);
+});
 
 // comments stuff
 // SAMPLE COMMENTS! 🤡

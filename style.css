@@ -14,25 +14,32 @@
   font-display: swap;
 }
 
+:root {
+  --bg-color-0: hsl(191deg, 83%, 55%);
+  --bg-color-1: hsl(198deg, 79%, 77%);
+  --bg-color-2: hsl(211deg, 66%, 92%);
+  --bg-color-3: hsl(221deg, 56%, 100%);
+}
+
 body.color-0 {
-  background-color: hsl(191deg, 83%, 60%);
+  background-color: var(--bg-color-0);
 }
 
 body.color-1 {
-  background-color: hsl(201deg, 76%, 72%);
+  background-color: var(--bg-color-1);
 }
 
 body.color-2 {
-  background-color: hsl(211deg, 66%, 92%);
+  background-color: var(--bg-color-2);
 }
 
 body.color-3 {
-  background-color: hsl(221deg, 56%, 100%);
+  background-color: var(--bg-color-3);
 }
 
 body {
+  background-color: var(--bg-color-0);
   font-family: "Hepta Slab", serif;
-  background-color: hsl(191deg, 86%, 52%);
   font-optical-sizing: auto;
   transition: background-color 0.6s;
 }
@@ -110,11 +117,11 @@ main {
 }
 
 .off-right {
-  left: 120vw;
+  left: 480vw;
 }
 
 .off-left {
-  left: -120vw;
+  left: -480vw;
 }
 
 form img {
@@ -224,128 +231,6 @@ div.comment {
   padding: 0.3em 1.3em;
 }
 
-@media (max-width: 700px) {
-  img {
-    width: 80vw;
-  }
-}
-
-@media (orientation: portrait) {
-  form,
-  div#appointment-form-submitted {
-    width: 86vw;
-  }
-
-  h1 {
-    font-size: 100px;
-    margin-top: 1em;
-  }
-
-  img {
-    width: 86vw;
-    max-width: none;
-  }
-
-  body {
-    font-size: 30px;
-  }
-
-  main {
-    font-size: 50px;
-  }
-
-  .brief-pitch {
-    text-indent: 4em;
-  }
-
-  [id*="page-name"] {
-    top: 555px;
-  }
-
-  button {
-    font-size: 30px;
-  }
-
-  select,
-  input {
-    font-size: 40px;
-  }
-}
-
-@media (orientation: portrait) and (max-height: 2050px) {
-  [id*="page-name"] {
-    top: 444px;
-  }
-
-  .brief-pitch {
-    font-size: 20px;
-  }
-}
-
-@media (orientation: portrait) and (max-height: 1800px) {
-  main {
-    font-size: 40px;
-  }
-
-  select,
-  input {
-    font-size: 30px;
-  }
-}
-
-@media (orientation: portrait) and (max-height: 1550px) {
-  body {
-    font-size: 20px;
-  }
-
-  .brief-pitch {
-    font-size: 30px;
-  }
-
-  [id*="page-name"] {
-    top: 360px;
-  }
-
-  img {
-    object-fit: cover;
-    height: 250px;
-    object-position: 0 33%;
-  }
-}
-
-@media (orientation: portrait) and (max-height: 1300px) {
-  h1 {
-    font-size: 85px;
-  }
-
-  select,
-  input {
-    font-size: 25px;
-  }
-}
-
-@media (orientation: landscape) and (max-height: 800px) {
-  img {
-    object-fit: cover;
-    height: 200px;
-    object-position: 0 33%;
-  }
-
-  [id*="page-name"] {
-    top: 100px;
-  }
-
-  form {
-    font-size: 14px;
-    width: 600px;
-  }
-
-  form#appointment-request-form > * {
-    margin-bottom: 3px;
-    margin-top: 3px;
-  }
-}
-
 @keyframes spinning {
   0% {
     transform: rotate(0turn);
@@ -355,12 +240,12 @@ div.comment {
   }
 }
 
-div[id*="animation001"] > div {
+[id*="animation001"] > div {
   z-index: 1;
   position: relative;
 }
 
-div[id*="animation001"] > div > div {
+[id*="animation001"] > div > div {
   animation-timing-function: linear;
   animation-name: spinning;
   animation-iteration-count: infinite;
@@ -369,4 +254,7 @@ div[id*="animation001"] > div > div {
   left: 0px;
   width: 2.5em;
   height: 2.5em;
+}
+
+@media (min-width: 1200px) and (max-height: 800px) {
 }
