@@ -19,8 +19,9 @@ type Event struct {
 }
 
 type Comment struct {
-	Author string `json:"author"`
+	Author string `json:"name"`
 	Text   string `json:"text"`
+	Date   string `json:"date"`
 }
 
 type Comments struct {
@@ -43,9 +44,21 @@ func init() {
 
 func getDynamoComment(value map[string]types.AttributeValue) Comment {
 	// this should get comments from the table 😁
-	return Comment{
-		value["Author"].(*types.AttributeValueMemberS).Value,
-		value["Text"].(*types.AttributeValueMemberS).Value,
+	date := value["Date"]
+	if date != nil {
+		return Comment{
+			value["Author"].(*types.AttributeValueMemberS).Value,
+			value["Text"].(*types.AttributeValueMemberS).Value,
+			date.(*types.AttributeValueMemberS).Value,
+			// I believe that if there is no "Date" in the map, then it will just come back with a zero value
+
+		}
+	} else {
+		return Comment{
+			value["Author"].(*types.AttributeValueMemberS).Value,
+			value["Text"].(*types.AttributeValueMemberS).Value,
+			"",
+		}
 	}
 }
 

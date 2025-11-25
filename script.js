@@ -274,8 +274,8 @@ const spikyClipPath = (spikeCount, innerRadius, spikeLength) =>
     .flatMap((e) => e.join(" "))
     .join(", ")})`;
 
-    // TODO: use the spikyClipPath again for a second animation
-    // which will be a starry night with twinkling star animations
+// TODO: use the spikyClipPath again for a second animation
+// which will be a starry night with twinkling star animations
 
 [...document.querySelectorAll("div[id*=animation001] > div")].forEach(
   (e, i) => {
@@ -311,7 +311,7 @@ const spikyClipPath = (spikeCount, innerRadius, spikeLength) =>
 
 // comments stuff
 // SAMPLE COMMENTS! 🤡
-const sampleComments = [
+/*const sampleComments = [
   {
     text: "You suck!",
     name: "Doug",
@@ -341,7 +341,7 @@ const sampleComments = [
     name: "Vegeta",
     date: "2025-11-11T02:31:50.211Z",
   },
-];
+];*/
 
 const commentsViewBox = document.createElement("div");
 commentsViewBox.id = "comments-view-box";
@@ -349,13 +349,20 @@ const exitButton = document.createElement("div");
 exitButton.id = "comments-view-box-exit-button";
 exitButton.textContent = "exit";
 commentsViewBox.appendChild(exitButton);
+
 exitButton.addEventListener("click", () => {
   commentsViewBox.parentNode.removeChild(commentsViewBox);
 });
 
 const commentsReadingArea = document.createElement("div");
 
+const displayedComments = new Set();
+
 const displayComment = ({ text, name, date }) => {
+  if (displayedComments.has(JSON.stringify([text, name, date]))) {
+    return;
+  }
+
   const comment = document.createElement("div");
   const commentText = document.createElement("p");
   const commentAuthor = document.createElement("h3");
@@ -376,9 +383,12 @@ const displayComment = ({ text, name, date }) => {
 
   comment.classList.add("comment");
   commentsReadingArea.appendChild(comment);
+  displayedComments.add(JSON.stringify([text, name, date]));
 };
 
-sampleComments.forEach(displayComment);
+// Not going to display the sample comments any more!
+// (because we are going to get comments from api gateway 🕸️
+// sampleComments.forEach(displayComment);
 
 commentsViewBox.appendChild(commentsReadingArea);
 
@@ -405,7 +415,9 @@ commentForm.addEventListener("submit", (submitEvent) => {
     date: new Date().toJSON(),
   };
 
-  sampleComments.push(comment);
+  // Instead of pushing the comment to "sample comments"
+  // I now send it to api gateway instead! 💪
+  // sampleComments.push(comment);
   displayComment(comment);
   // TODO: Maybe move this "magic value" to a config file
   fetch("https://hqlpruvski.execute-api.us-west-2.amazonaws.com/comment", {
@@ -415,12 +427,52 @@ commentForm.addEventListener("submit", (submitEvent) => {
       text: formFields[1].value,
     }),
   });
+
+  // TODO: after the request comes back OK from api gateway
+  // let's then put a message thanking the user for their comment (and not display the form anymore)
 });
 
 commentsViewBox.appendChild(commentForm);
+
+// Escape is deprecated 😭
+const myEscape = (s) =>
+  // This function is copied from: https://github.com/zloirock/core-js/blob/4517639c02890c5c67aab51370d4937aba1d40f4/packages/core-js/modules/es.escape.js#L29
+  s.replace(/[^\w*+\-./@]/g, (m) => {
+    const charCode = m.charCodeAt(0);
+    if (charCode < 256) {
+      return "%" + charCode.toString(16).toLocaleUpperCase().padStart(2, "0");
+    } else {
+      return "%u" + charCode.toString(16).toLocaleUpperCase().padStart(4, "0");
+    }
+  });
 
 // viewing the comments!
 pageElements.viewComments.addEventListener("click", () => {
   // show the comments view box
   document.body.appendChild(commentsViewBox);
+  // clear comments
+  const storedComments = JSON.parse(localStorage.getItem("comments"));
+  const loadingMessage = document.createElement("h2");
+  if (storedComments) {
+    storedComments.forEach(displayComment);
+  } else {
+    loadingMessage.textContent = "Cargando comentarios...";
+    commentsReadingArea.appendChild(loadingMessage);
+  }
+
+  fetch("https://hqlpruvski.execute-api.us-west-2.amazonaws.com/comment")
+    .then((r) => r.text())
+    .then(atob)
+    .then(myEscape)
+    .then(decodeURIComponent)
+    .then(JSON.parse)
+    .then(({ comments }) => {
+      if (loadingMessage.textContent) {
+        commentsReadingArea.removeChild(loadingMessage);
+        loadingMessage.textContent = "";
+      }
+
+      comments.forEach(displayComment);
+      localStorage.setItem("comments", JSON.stringify(comments));
+    });
 });

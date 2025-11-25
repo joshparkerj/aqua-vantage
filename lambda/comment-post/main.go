@@ -64,7 +64,8 @@ func saveComment(ctx context.Context, tableName string, comment Comment) error {
 		return err
 	}
 
-	input.Item["Date"] = dynamoString(string(dateBytes))
+	// I am slicing the dateBytes to remove the opening and closing double quotes 🧐
+	input.Item["Date"] = dynamoString(string(dateBytes[1 : len(dateBytes)-1]))
 
 	/*output*/
 	// Here we put the item into Dynamo DB

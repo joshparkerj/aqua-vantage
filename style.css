@@ -214,9 +214,13 @@ div#comments-view-box h3 {
   color: white;
 }
 
+div#comments-view-box h2 {
+  margin-left: 0.8rem;
+}
+
 div.comment {
   background: hsla(0deg, 100%, 100%, 0.08);
-  margin: 0.8em;
+  margin: 0.8rem;
   padding: 0.3em 1.3em;
 }
 
